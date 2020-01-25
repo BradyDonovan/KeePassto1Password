@@ -2,7 +2,8 @@
 [CmdletBinding()]
 param (
     # Where to retrieve the KeePass exported CSV. Expecting a file.
-    [Parameter(Mandatory = $true)]
+    [Alias("kpp")]
+    [Parameter(Mandatory = $true, Position = 0)]
     [ValidateScript( {
             IF ((Test-Path -Path $_ -PathType Leaf) -eq $false) {
                 throw "[!] Failed parameter validation on KeePassCSVPath. Path [$_] does not exist, can't be reached, or a folder was passed when a file was expected."
@@ -14,7 +15,8 @@ param (
     [string]
     $KeePassCSVPath,
     # Where to save the csv. Expecting a folder.
-    [Parameter(Mandatory = $true)]
+    [Alias("1pp")]
+    [Parameter(Mandatory = $true, Position = 1)]
     [ValidateScript( {
             IF ((Test-Path -Path $_ -PathType Container) -eq $false) {
                 throw "[!] Failed parameter validation on 1PasswordCSVSavePath. Path [$_] does not exist, can't be reached, or a file was passed when a folder was expected."
@@ -38,8 +40,6 @@ process {
             Username         = $entry.Username | Out-String
             Password         = $entry.Password | Out-String
             Notes            = $entry.Notes | Out-String
-            'Member Number'  = $null
-            'Recovery Codes' = $null
         } | Export-Csv -Path $1PasswordCSVSavePath -NoTypeInformation -Delimiter ',' -Append
     }
 
